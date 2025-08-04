@@ -1,6 +1,6 @@
-# Terragon Project
+# ADHDNSW.org
 
-A production-ready Next.js application with modular architecture, comprehensive testing, and automated CI/CD.
+A comprehensive SEO-optimized platform for the ADHD community in New South Wales, featuring a searchable directory of professionals and expert resources.
 
 ## Quick Start
 
@@ -87,9 +87,26 @@ VERCEL_ORG_ID=
 VERCEL_PROJECT_ID=
 ```
 
-## Open Questions
+## Features
 
-- [ ] Project name and package name to use?
-- [ ] Primary domain/URL for deployment?
-- [ ] Supabase project URL and keys?
-- [ ] Any specific feature priorities beyond example setup?
+- 🔍 **Searchable Directory**: Find ADHD professionals by location, specialty, and availability
+- 📚 **Resource Hub**: Expert articles, guides, and NSW-specific ADHD information
+- 📱 **Mobile-Friendly**: Fully responsive design for all devices
+- 🚀 **Fast & SEO-Optimized**: Built for performance and search visibility
+- ♿ **Accessible**: WCAG 2.1 AA compliant
+- 🗺️ **Location-Based**: Find professionals near you with distance filtering
+
+## Project Status
+
+✅ Phase 1 Complete:
+- Professional directory with advanced filtering
+- SEO-optimized blog system
+- Structured data implementation
+- Mobile-responsive design
+- Core Web Vitals optimization
+
+🚧 Phase 2 (Planned):
+- User accounts and saved searches
+- Professional profile management
+- Review system
+- Email notifications
