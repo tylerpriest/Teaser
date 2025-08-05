@@ -6,6 +6,7 @@ import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'
 import { BlogService } from '@/features/adhdnsw/services/blog.service'
 
 import { Button } from '@/shared/components/button'
+import { Input } from '@/shared/components/input'
 
 async function BlogContent({
   searchParams,
@@ -163,10 +164,10 @@ async function BlogContent({
             delivered to your inbox monthly.
           </p>
           <form className="max-w-md mx-auto flex gap-3">
-            <input
+            <Input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1"
               required
             />
             <Button type="submit">Subscribe</Button>

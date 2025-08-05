@@ -4,7 +4,9 @@ import { MapPin, Phone, Globe, CheckCircle, Clock } from 'lucide-react'
 
 import type { Professional } from '../../types'
 
+import { Badge } from '@/shared/components/badge'
 import { Button } from '@/shared/components/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/shared/components/card'
 import { cn } from '@/shared/lib/utils'
 
 interface ProfessionalCardProps {
@@ -18,36 +20,39 @@ export function ProfessionalCard({ professional, className }: ProfessionalCardPr
   const services = professional.services?.slice(0, 3) || []
   
   return (
-    <article className={cn("bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow", className)}>
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-semibold mb-1">
-            <Link 
-              href={`/professionals/${professional.slug}`}
-              className="text-primary hover:underline"
-            >
-              {fullName}
-            </Link>
-          </h3>
-          {professional.credentials.length > 0 && (
-            <p className="text-sm text-muted-foreground">
-              {professional.credentials.join(', ')}
-            </p>
+    <Card className={cn("hover:shadow-lg transition-shadow", className)}>
+      <CardHeader className="pb-4">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-xl font-semibold mb-1">
+              <Link 
+                href={`/professionals/${professional.slug}`}
+                className="text-primary hover:underline"
+              >
+                {fullName}
+              </Link>
+            </h3>
+            {professional.credentials.length > 0 && (
+              <p className="text-sm text-muted-foreground">
+                {professional.credentials.join(', ')}
+              </p>
+            )}
+          </div>
+          {professional.isVerified && (
+            <CheckCircle className="h-5 w-5 text-green-600" aria-label="Verified professional" />
           )}
         </div>
-        {professional.isVerified && (
-          <CheckCircle className="h-5 w-5 text-green-600" aria-label="Verified professional" />
-        )}
-      </div>
+      </CardHeader>
 
-      {/* Services */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <CardContent className="pt-0">
+        {/* Services */}
+        <div className="flex flex-wrap gap-2 mb-4">
         {services.map(service => (
           <span 
             key={service.id}
-            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
+            asChild
           >
-            {service.name}
+            <Badge variant="secondary">{service.name}</Badge>
           </span>
         ))}
         {professional.services && professional.services.length > 3 && (
@@ -94,10 +99,10 @@ export function ProfessionalCard({ professional, className }: ProfessionalCardPr
             Website
           </a>
         )}
-      </div>
-
-      {/* Status */}
-      <div className="flex items-center justify-between">
+      </CardContent>
+      <CardFooter className="flex-col items-stretch gap-3">
+        {/* Status */}
+        <div className="flex items-center justify-between">
         <div className="flex items-center gap-4 text-sm">
           {professional.acceptsNewPatients ? (
             <span className="text-green-600 font-medium">Accepting new patients</span>
@@ -117,21 +122,18 @@ export function ProfessionalCard({ professional, className }: ProfessionalCardPr
             View Profile
           </Link>
         </Button>
-      </div>
+        </div>
 
-      {/* Additional badges */}
-      <div className="mt-3 flex flex-wrap gap-2">
+        {/* Additional badges */}
+        <div className="flex flex-wrap gap-2">
         {professional.ndisRegistered && (
-          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
-            NDIS Registered
-          </span>
+          <Badge variant="info">NDIS Registered</Badge>
         )}
         {professional.languages.some(l => l !== 'English') && (
-          <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded">
-            Multilingual
-          </span>
+          <Badge variant="secondary">Multilingual</Badge>
         )}
-      </div>
-    </article>
+        </div>
+      </CardFooter>
+    </Card>
   )
 }

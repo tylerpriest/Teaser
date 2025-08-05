@@ -10,6 +10,7 @@ import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 import { SEOService } from '@/features/adhdnsw/services/seo.service'
 
 import { Button } from '@/shared/components/button'
+import { Input } from '@/shared/components/input'
 
 export const metadata: Metadata = {
   title: 'ADHD NSW - Find ADHD Specialists & Resources in New South Wales',
@@ -61,18 +62,18 @@ export default async function HomePage() {
               <form className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <input
+                  <Input
                     type="text"
                     placeholder="Search professionals by name or specialty..."
-                    className="w-full pl-10 pr-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full pl-10 pr-4 py-3"
                   />
                 </div>
                 <div className="md:w-64 relative">
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <input
+                  <Input
                     type="text"
                     placeholder="Suburb or postcode"
-                    className="w-full pl-10 pr-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full pl-10 pr-4 py-3"
                   />
                 </div>
                 <Button size="lg" type="submit">
