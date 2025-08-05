@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { Search, MapPin, Filter, X } from 'lucide-react'
 import { Button } from '@/shared/components/button'

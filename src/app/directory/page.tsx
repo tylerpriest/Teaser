@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
+import Link from 'next/link'
 import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 import { SEOService } from '@/features/adhdnsw/services/seo.service'
-import { SEOHead } from '@/features/adhdnsw/components/seo/SEOHead'
 import { DirectoryFilters } from '@/features/adhdnsw/components/directory/DirectoryFilters'
 import { ProfessionalCard } from '@/features/adhdnsw/components/directory/ProfessionalCard'
 import { Button } from '@/shared/components/button'
@@ -91,14 +91,15 @@ async function DirectoryContent({
             {pagination.totalPages > 1 && (
               <div className="mt-8 flex justify-center gap-2">
                 {params.page > 1 && (
-                  <Button
-                    variant="outline"
-                    href={`/directory?${new URLSearchParams({
-                      ...searchParams,
-                      page: String(params.page - 1),
-                    }).toString()}`}
-                  >
-                    Previous
+                  <Button variant="outline" asChild>
+                    <Link
+                      href={`/directory?${new URLSearchParams({
+                        ...searchParams,
+                        page: String(params.page - 1),
+                      }).toString()}`}
+                    >
+                      Previous
+                    </Link>
                   </Button>
                 )}
                 
@@ -110,26 +111,31 @@ async function DirectoryContent({
                         key={pageNum}
                         variant={pageNum === params.page ? 'default' : 'outline'}
                         size="sm"
-                        href={`/directory?${new URLSearchParams({
-                          ...searchParams,
-                          page: String(pageNum),
-                        }).toString()}`}
+                        asChild
                       >
-                        {pageNum}
+                        <Link
+                          href={`/directory?${new URLSearchParams({
+                            ...searchParams,
+                            page: String(pageNum),
+                          }).toString()}`}
+                        >
+                          {pageNum}
+                        </Link>
                       </Button>
                     )
                   })}
                 </div>
                 
                 {params.page < pagination.totalPages && (
-                  <Button
-                    variant="outline"
-                    href={`/directory?${new URLSearchParams({
-                      ...searchParams,
-                      page: String(params.page + 1),
-                    }).toString()}`}
-                  >
-                    Next
+                  <Button variant="outline" asChild>
+                    <Link
+                      href={`/directory?${new URLSearchParams({
+                        ...searchParams,
+                        page: String(params.page + 1),
+                      }).toString()}`}
+                    >
+                      Next
+                    </Link>
                   </Button>
                 )}
               </div>
@@ -140,8 +146,8 @@ async function DirectoryContent({
             <p className="text-muted-foreground mb-4">
               No professionals found matching your search criteria.
             </p>
-            <Button variant="outline" href="/directory">
-              Clear filters
+            <Button variant="outline" asChild>
+              <Link href="/directory">Clear filters</Link>
             </Button>
           </div>
         )}
@@ -169,17 +175,17 @@ async function DirectoryContent({
             </ul>
             <h3>Popular Searches</h3>
             <div className="flex flex-wrap gap-2 mt-4">
-              <Button variant="outline" size="sm" href="/directory?services=psychiatrist">
-                ADHD Psychiatrists
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/directory?services=psychiatrist">ADHD Psychiatrists</Link>
               </Button>
-              <Button variant="outline" size="sm" href="/directory?location=Sydney">
-                Sydney ADHD Specialists
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/directory?location=Sydney">Sydney ADHD Specialists</Link>
               </Button>
-              <Button variant="outline" size="sm" href="/directory?telehealth=true">
-                Telehealth Options
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/directory?telehealth=true">Telehealth Options</Link>
               </Button>
-              <Button variant="outline" size="sm" href="/directory?ndis=true">
-                NDIS Providers
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/directory?ndis=true">NDIS Providers</Link>
               </Button>
             </div>
           </div>
