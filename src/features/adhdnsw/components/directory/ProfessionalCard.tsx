@@ -5,6 +5,7 @@ import { Badge } from '@/shared/components/badge'
 import { Button } from '@/shared/components/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/shared/components/card'
 import { cn } from '@/shared/lib/utils'
+
 import type { Professional } from '../../types'
 
 interface ProfessionalCardProps {
