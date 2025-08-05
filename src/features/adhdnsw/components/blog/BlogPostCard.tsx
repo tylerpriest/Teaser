@@ -1,6 +1,6 @@
+import { Calendar, Clock, Tag } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Calendar, Clock, Tag } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
 import type { BlogPost } from '../../types'

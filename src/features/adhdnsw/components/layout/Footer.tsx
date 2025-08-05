@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { Facebook, Twitter, Mail, Phone, MapPin } from 'lucide-react'
+import Link from 'next/link'
 
 const footerLinks = {
   directory: [

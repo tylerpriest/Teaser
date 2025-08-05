@@ -1,8 +1,8 @@
 'use client'
 
+import { Menu, X, Search, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Search, ChevronDown } from 'lucide-react'
 
 import { Button } from '@/shared/components/button'
 import { cn } from '@/shared/lib/utils'
