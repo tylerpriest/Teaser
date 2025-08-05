@@ -7,6 +7,7 @@ import type {
   PaginatedResponse,
   ServiceType,
   AgeGroup,
+  PaymentMethod,
 } from '../types'
 
 export class DirectoryService {
@@ -34,7 +35,8 @@ export class DirectoryService {
     // Start with base query
     let queryBuilder = supabase
       .from('professionals')
-      .select(`
+      .select(
+        `
         *,
         locations!inner(
           id,
@@ -71,7 +73,9 @@ export class DirectoryService {
           ),
           bulk_billing_available
         )
-      `, { count: 'exact' })
+      `,
+        { count: 'exact' }
+      )
       .eq('is_active', true)
 
     // Apply filters
@@ -170,10 +174,13 @@ export class DirectoryService {
   /**
    * Get a single professional by slug
    */
-  static async getProfessionalBySlug(slug: string): Promise<Professional | null> {
+  static async getProfessionalBySlug(
+    slug: string
+  ): Promise<Professional | null> {
     const { data, error } = await supabase
       .from('professionals')
-      .select(`
+      .select(
+        `
         *,
         locations(
           *
@@ -188,7 +195,8 @@ export class DirectoryService {
           payment_method:payment_methods(*),
           bulk_billing_available
         )
-      `)
+      `
+      )
       .eq('slug', slug)
       .eq('is_active', true)
       .single()
@@ -263,60 +271,74 @@ export class DirectoryService {
   /**
    * Transform raw database data to Professional type
    */
-  private static transformProfessional(data: Record<string, unknown>): Professional {
+  private static transformProfessional(
+    data: Record<string, unknown>
+  ): Professional {
     return {
-      id: data.id,
-      slug: data.slug,
-      title: data.title,
-      firstName: data.first_name,
-      lastName: data.last_name,
-      credentials: data.credentials || [],
-      registrationNumber: data.registration_number,
-      email: data.email,
-      phone: data.phone,
-      website: data.website,
-      bookingUrl: data.booking_url,
-      isVerified: data.is_verified,
-      verifiedAt: data.verified_at ? new Date(data.verified_at) : undefined,
-      isActive: data.is_active,
-      acceptsNewPatients: data.accepts_new_patients,
-      waitlistWeeks: data.waitlist_weeks,
-      bio: data.bio,
-      approach: data.approach,
-      specializations: data.specializations || [],
-      languages: data.languages || [],
-      ndisRegistered: data.ndis_registered,
-      metaTitle: data.meta_title,
-      metaDescription: data.meta_description,
-      locations: data.locations?.map(this.transformLocation),
-      services: (data.professional_services as Record<string, unknown>[])?.map((ps: Record<string, unknown>) => ps.service_type),
-      ageGroups: (data.professional_age_groups as Record<string, unknown>[])?.map((pa: Record<string, unknown>) => pa.age_group),
-      paymentMethods: (data.professional_payment_methods as Record<string, unknown>[])?.map((pp: Record<string, unknown>) => ({
-        ...pp.payment_method,
-        bulkBillingAvailable: pp.bulk_billing_available,
+      id: data.id as string,
+      slug: data.slug as string,
+      title: data.title as string,
+      firstName: data.first_name as string,
+      lastName: data.last_name as string,
+      credentials: (data.credentials as string[]) || [],
+      registrationNumber: data.registration_number as string | undefined,
+      email: data.email as string | undefined,
+      phone: data.phone as string | undefined,
+      website: data.website as string | undefined,
+      bookingUrl: data.booking_url as string | undefined,
+      isVerified: data.is_verified as boolean,
+      verifiedAt: data.verified_at
+        ? new Date(data.verified_at as string)
+        : undefined,
+      isActive: data.is_active as boolean,
+      acceptsNewPatients: data.accepts_new_patients as boolean,
+      waitlistWeeks: data.waitlist_weeks as number | undefined,
+      bio: data.bio as string | undefined,
+      approach: data.approach as string | undefined,
+      specializations: (data.specializations as string[]) || [],
+      languages: (data.languages as string[]) || [],
+      ndisRegistered: data.ndis_registered as boolean,
+      metaTitle: data.meta_title as string | undefined,
+      metaDescription: data.meta_description as string | undefined,
+      locations: (data.locations as Record<string, unknown>[])?.map(
+        this.transformLocation
+      ),
+      services: (data.professional_services as Record<string, unknown>[])?.map(
+        (ps: Record<string, unknown>) => ps.service_type as ServiceType
+      ),
+      ageGroups: (
+        data.professional_age_groups as Record<string, unknown>[]
+      )?.map((pa: Record<string, unknown>) => pa.age_group as AgeGroup),
+      paymentMethods: (
+        data.professional_payment_methods as Record<string, unknown>[]
+      )?.map((pp: Record<string, unknown>) => ({
+        ...(pp.payment_method as PaymentMethod),
+        bulkBillingAvailable: pp.bulk_billing_available as boolean | undefined,
       })),
     }
   }
 
-  private static transformProfessionalData(data: Record<string, unknown>[]): Professional[] {
+  private static transformProfessionalData(
+    data: Record<string, unknown>[]
+  ): Professional[] {
     return data.map(this.transformProfessional)
   }
 
   private static transformLocation(data: Record<string, unknown>): Location {
     return {
-      id: data.id,
-      professionalId: data.professional_id,
-      name: data.name,
-      streetAddress: data.street_address,
-      suburb: data.suburb,
-      state: data.state,
-      postcode: data.postcode,
-      latitude: data.latitude,
-      longitude: data.longitude,
-      phone: data.phone,
-      email: data.email,
-      isPrimary: data.is_primary,
-      offersTelehealth: data.offers_telehealth,
+      id: data.id as string,
+      professionalId: data.professional_id as string,
+      name: data.name as string,
+      streetAddress: data.street_address as string,
+      suburb: data.suburb as string,
+      state: data.state as string,
+      postcode: data.postcode as string,
+      latitude: data.latitude as number | undefined,
+      longitude: data.longitude as number | undefined,
+      phone: data.phone as string | undefined,
+      email: data.email as string | undefined,
+      isPrimary: data.is_primary as boolean,
+      offersTelehealth: data.offers_telehealth as boolean,
     }
   }
 }

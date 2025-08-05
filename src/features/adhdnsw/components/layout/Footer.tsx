@@ -1,4 +1,5 @@
 import { Facebook, Twitter, Mail, Phone, MapPin } from 'lucide-react'
+import { Route } from 'next'
 import Link from 'next/link'
 
 const footerLinks = {
@@ -32,22 +33,23 @@ export function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center mb-4">
+            <Link href="/" className="mb-4 flex items-center">
               <span className="text-2xl font-bold text-white">ADHD</span>
-              <span className="text-2xl font-bold text-primary ml-1">NSW</span>
+              <span className="ml-1 text-2xl font-bold text-primary">NSW</span>
             </Link>
-            <p className="text-sm mb-4">
-              Your trusted guide to ADHD support services and professionals across New South Wales.
+            <p className="mb-4 text-sm">
+              Your trusted guide to ADHD support services and professionals
+              across New South Wales.
             </p>
             <div className="flex space-x-4">
               <a
                 href="https://facebook.com/adhdnsw"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="transition-colors hover:text-white"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
@@ -56,14 +58,14 @@ export function Footer() {
                 href="https://twitter.com/adhdnsw"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="transition-colors hover:text-white"
                 aria-label="Twitter"
               >
                 <Twitter className="h-5 w-5" />
               </a>
               <a
                 href="mailto:info@adhdnsw.org"
-                className="hover:text-white transition-colors"
+                className="transition-colors hover:text-white"
                 aria-label="Email"
               >
                 <Mail className="h-5 w-5" />
@@ -73,13 +75,13 @@ export function Footer() {
 
           {/* Directory */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Directory</h3>
+            <h3 className="mb-4 font-semibold text-white">Directory</h3>
             <ul className="space-y-2">
               {footerLinks.directory.map((link) => (
                 <li key={link.name}>
                   <Link
-                    href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    href={link.href as Route}
+                    className="text-sm transition-colors hover:text-white"
                   >
                     {link.name}
                   </Link>
@@ -90,13 +92,13 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Resources</h3>
+            <h3 className="mb-4 font-semibold text-white">Resources</h3>
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.name}>
                   <Link
-                    href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    href={link.href as Route}
+                    className="text-sm transition-colors hover:text-white"
                   >
                     {link.name}
                   </Link>
@@ -107,13 +109,13 @@ export function Footer() {
 
           {/* Popular Locations */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Popular Areas</h3>
+            <h3 className="mb-4 font-semibold text-white">Popular Areas</h3>
             <ul className="space-y-2">
               {footerLinks.locations.map((link) => (
                 <li key={link.name}>
                   <Link
-                    href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    href={link.href as Route}
+                    className="text-sm transition-colors hover:text-white"
                   >
                     {link.name} ADHD Services
                   </Link>
@@ -124,25 +126,27 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Get in Touch</h3>
+            <h3 className="mb-4 font-semibold text-white">Get in Touch</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <Mail className="h-4 w-4 mt-0.5 mr-2 flex-shrink-0" />
+                <Mail className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0" />
                 <a
                   href="mailto:info@adhdnsw.org"
-                  className="text-sm hover:text-white transition-colors"
+                  className="text-sm transition-colors hover:text-white"
                 >
                   info@adhdnsw.org
                 </a>
               </li>
               <li className="flex items-start">
-                <Phone className="h-4 w-4 mt-0.5 mr-2 flex-shrink-0" />
+                <Phone className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0" />
                 <span className="text-sm">1300 ADHD NSW</span>
               </li>
               <li className="flex items-start">
-                <MapPin className="h-4 w-4 mt-0.5 mr-2 flex-shrink-0" />
+                <MapPin className="mr-2 mt-0.5 h-4 w-4 flex-shrink-0" />
                 <span className="text-sm">
-                  Serving all of<br />New South Wales
+                  Serving all of
+                  <br />
+                  New South Wales
                 </span>
               </li>
             </ul>
@@ -150,39 +154,40 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="mt-12 border-t border-gray-800 pt-8">
+          <div className="flex flex-col items-center justify-between md:flex-row">
             <p className="text-sm">
               © {new Date().getFullYear()} ADHD NSW. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            <div className="mt-4 flex space-x-6 md:mt-0">
               <Link
                 href="/privacy"
-                className="text-sm hover:text-white transition-colors"
+                className="text-sm transition-colors hover:text-white"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                className="text-sm hover:text-white transition-colors"
+                className="text-sm transition-colors hover:text-white"
               >
                 Terms of Use
               </Link>
               <Link
                 href="/sitemap"
-                className="text-sm hover:text-white transition-colors"
+                className="text-sm transition-colors hover:text-white"
               >
                 Sitemap
               </Link>
             </div>
           </div>
-          
+
           {/* Disclaimer */}
           <div className="mt-6 text-xs text-gray-500">
             <p>
-              The information on this website is for general informational purposes only 
-              and should not be considered medical advice. Always consult with qualified 
-              healthcare professionals for diagnosis and treatment of ADHD.
+              The information on this website is for general informational
+              purposes only and should not be considered medical advice. Always
+              consult with qualified healthcare professionals for diagnosis and
+              treatment of ADHD.
             </p>
           </div>
         </div>

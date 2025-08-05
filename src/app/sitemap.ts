@@ -5,7 +5,7 @@ import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://adhdnsw.org'
-  
+
   // Fetch all professionals and blog posts for sitemap
   const [professionals, blogEntries, categories] = await Promise.all([
     DirectoryService.searchProfessionals({ limit: 1000 }),
@@ -60,15 +60,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // Professional pages
-  const professionalPages: MetadataRoute.Sitemap = professionals.data.map((professional) => ({
-    url: `${baseUrl}/professionals/${professional.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }))
+  const professionalPages: MetadataRoute.Sitemap = professionals.data.map(
+    (professional) => ({
+      url: `${baseUrl}/professionals/${professional.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    })
+  )
 
   // Location-based directory pages (major NSW cities)
-  const locations = ['Sydney', 'Newcastle', 'Wollongong', 'Central Coast', 'Parramatta', 'Penrith']
+  const locations = [
+    'Sydney',
+    'Newcastle',
+    'Wollongong',
+    'Central Coast',
+    'Parramatta',
+    'Penrith',
+  ]
   const locationPages: MetadataRoute.Sitemap = locations.map((location) => ({
     url: `${baseUrl}/directory?location=${encodeURIComponent(location)}`,
     lastModified: new Date(),
@@ -77,7 +86,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // Service-based directory pages
-  const services = ['psychiatrist', 'psychologist', 'paediatrician', 'adhd-coach']
+  const services = [
+    'psychiatrist',
+    'psychologist',
+    'paediatrician',
+    'adhd-coach',
+  ]
   const servicePages: MetadataRoute.Sitemap = services.map((service) => ({
     url: `${baseUrl}/directory?services=${service}`,
     lastModified: new Date(),
@@ -93,12 +107,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
+  // Transform blog entries to match MetadataRoute.Sitemap format
+  const transformedBlogEntries: MetadataRoute.Sitemap = blogEntries.map(
+    (entry) => ({
+      url: entry.loc,
+      lastModified: new Date(entry.lastmod),
+      changeFrequency: entry.changefreq as
+        | 'daily'
+        | 'weekly'
+        | 'monthly'
+        | 'yearly'
+        | 'always'
+        | 'hourly'
+        | 'never',
+      priority: entry.priority,
+    })
+  )
+
   return [
     ...staticPages,
     ...professionalPages,
     ...locationPages,
     ...servicePages,
     ...categoryPages,
-    ...blogEntries,
+    ...transformedBlogEntries,
   ]
 }

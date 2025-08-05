@@ -1,6 +1,7 @@
 'use client'
 
 import { Menu, X, Search, ChevronDown } from 'lucide-react'
+import { Route } from 'next'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -40,19 +41,21 @@ export function Header() {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="sticky top-0 z-50 bg-white shadow-sm">
       <nav className="container mx-auto px-4" aria-label="Top">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <span className="text-2xl font-bold text-primary">ADHD</span>
-              <span className="text-2xl font-bold text-foreground ml-1">NSW</span>
+              <span className="ml-1 text-2xl font-bold text-foreground">
+                NSW
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden items-center space-x-8 md:flex">
             {navigation.map((item) => (
               <div
                 key={item.name}
@@ -61,26 +64,24 @@ export function Header() {
                 onMouseLeave={() => setOpenSubmenu(null)}
               >
                 <Link
-                  href={item.href}
+                  href={item.href as Route}
                   className={cn(
-                    "flex items-center text-foreground hover:text-primary transition-colors py-2",
-                    item.submenu && "pr-1"
+                    'flex items-center py-2 text-foreground transition-colors hover:text-primary',
+                    item.submenu && 'pr-1'
                   )}
                 >
                   {item.name}
-                  {item.submenu && (
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  )}
+                  {item.submenu && <ChevronDown className="ml-1 h-4 w-4" />}
                 </Link>
-                
+
                 {/* Dropdown */}
                 {item.submenu && openSubmenu === item.name && (
-                  <div className="absolute left-0 mt-0 w-56 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                  <div className="absolute left-0 mt-0 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
                       {item.submenu.map((subItem) => (
                         <Link
                           key={subItem.name}
-                          href={subItem.href}
+                          href={subItem.href as Route}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           {subItem.name}
@@ -94,10 +95,10 @@ export function Header() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden items-center space-x-4 md:flex">
             <Button size="sm" variant="outline" asChild>
               <Link href="/directory">
-                <Search className="h-4 w-4 mr-2" />
+                <Search className="mr-2 h-4 w-4" />
                 Find a Professional
               </Link>
             </Button>
@@ -123,12 +124,12 @@ export function Header() {
         {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden">
-            <div className="pt-2 pb-3 space-y-1">
+            <div className="space-y-1 pb-3 pt-2">
               {navigation.map((item) => (
                 <div key={item.name}>
                   <Link
-                    href={item.href}
-                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                    href={item.href as Route}
+                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}
@@ -138,8 +139,8 @@ export function Header() {
                       {item.submenu.map((subItem) => (
                         <Link
                           key={subItem.name}
-                          href={subItem.href}
-                          className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                          href={subItem.href as Route}
+                          className="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {subItem.name}
@@ -152,7 +153,7 @@ export function Header() {
               <div className="px-3 py-2">
                 <Button size="sm" className="w-full" asChild>
                   <Link href="/directory">
-                    <Search className="h-4 w-4 mr-2" />
+                    <Search className="mr-2 h-4 w-4" />
                     Find a Professional
                   </Link>
                 </Button>
