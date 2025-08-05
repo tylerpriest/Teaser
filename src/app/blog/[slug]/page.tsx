@@ -61,7 +61,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   const readingTime = Math.ceil(post.content.split(' ').length / 200)
-  const categoryIds = post.categories.map(c => c.id)
+  const categoryIds = post.categories?.map(c => c.id) || []
   const relatedPosts = await BlogService.getRelatedPosts(post.id, categoryIds, 3)
 
   // Generate structured data
@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <header className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Categories */}
-            {post.categories.length > 0 && (
+            {post.categories && post.categories.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {post.categories.map(category => (
                   <Link

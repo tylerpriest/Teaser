@@ -306,7 +306,7 @@ export class BlogService {
       <link>https://adhdnsw.org/blog/${post.slug}</link>
       <guid isPermaLink="true">https://adhdnsw.org/blog/${post.slug}</guid>
       <pubDate>${post.publishedAt?.toUTCString() || ''}</pubDate>
-      ${post.categories.map(cat => `<category>${cat.name}</category>`).join('\n      ')}
+      ${(post.categories || []).map(cat => `<category>${cat.name}</category>`).join('\n      ')}
     </item>`).join('')}
   </channel>
 </rss>`
