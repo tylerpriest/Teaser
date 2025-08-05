@@ -4,10 +4,9 @@ import { useState } from 'react'
 
 import { Search, MapPin, Filter, X } from 'lucide-react'
 
-import type { ServiceType, AgeGroup } from '../../types'
-
 import { Button } from '@/shared/components/button'
 import { cn } from '@/shared/lib/utils'
+import type { ServiceType, AgeGroup } from '../../types'
 
 interface DirectoryFiltersProps {
   services: ServiceType[]

@@ -1,3 +1,4 @@
+import { supabase } from '@/shared/services/supabase'
 import type {
   Professional,
   Location,
@@ -6,8 +7,6 @@ import type {
   ServiceType,
   AgeGroup,
 } from '../types'
-
-import { supabase } from '@/shared/services/supabase'
 
 export class DirectoryService {
   /**

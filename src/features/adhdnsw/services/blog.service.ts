@@ -1,3 +1,4 @@
+import { supabase } from '@/shared/services/supabase'
 import type {
   BlogPost,
   BlogCategory,
@@ -5,8 +6,6 @@ import type {
   BlogSearchParams,
   PaginatedResponse,
 } from '../types'
-
-import { supabase } from '@/shared/services/supabase'
 
 export class BlogService {
   /**

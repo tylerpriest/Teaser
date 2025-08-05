@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 
 import { Search, Users, BookOpen, ChevronRight, MapPin, Phone } from 'lucide-react'
 
@@ -8,7 +8,6 @@ import { ProfessionalCard } from '@/features/adhdnsw/components/directory/Profes
 import { BlogService } from '@/features/adhdnsw/services/blog.service'
 import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 import { SEOService } from '@/features/adhdnsw/services/seo.service'
-
 import { Button } from '@/shared/components/button'
 import { Input } from '@/shared/components/input'
 

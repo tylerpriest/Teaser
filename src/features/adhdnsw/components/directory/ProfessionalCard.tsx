@@ -2,12 +2,11 @@ import Link from 'next/link'
 
 import { MapPin, Phone, Globe, CheckCircle, Clock } from 'lucide-react'
 
-import type { Professional } from '../../types'
-
 import { Badge } from '@/shared/components/badge'
 import { Button } from '@/shared/components/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/shared/components/card'
 import { cn } from '@/shared/lib/utils'
+import type { Professional } from '../../types'
 
 interface ProfessionalCardProps {
   professional: Professional

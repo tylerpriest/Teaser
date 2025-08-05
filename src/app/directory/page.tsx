@@ -6,7 +6,6 @@ import { DirectoryFilters } from '@/features/adhdnsw/components/directory/Direct
 import { ProfessionalCard } from '@/features/adhdnsw/components/directory/ProfessionalCard'
 import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 import { SEOService } from '@/features/adhdnsw/services/seo.service'
-
 import { Button } from '@/shared/components/button'
 
 // Server component for the directory page
