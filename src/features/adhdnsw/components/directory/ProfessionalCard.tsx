@@ -1,5 +1,4 @@
 import Link from 'next/link'
-
 import { MapPin, Phone, Globe, CheckCircle, Clock } from 'lucide-react'
 
 import { Badge } from '@/shared/components/badge'

@@ -1,4 +1,5 @@
 import { supabase } from '@/shared/services/supabase'
+
 import type {
   Professional,
   Location,

@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
-
+import Link from 'next/link'
 import { Search, Users, BookOpen, ChevronRight, MapPin, Phone } from 'lucide-react'
 
 import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'

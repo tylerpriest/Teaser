@@ -1,6 +1,5 @@
-import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-
+import { notFound } from 'next/navigation'
 import { MapPin, Phone, Mail, Globe, CheckCircle, Clock, DollarSign } from 'lucide-react'
 
 import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
