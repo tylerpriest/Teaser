@@ -1,12 +1,14 @@
-import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+
 import { Calendar, Clock, User, Tag, Share2, Facebook, Twitter } from 'lucide-react'
+
+import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'
 import { BlogService } from '@/features/adhdnsw/services/blog.service'
 import { SEOService } from '@/features/adhdnsw/services/seo.service'
-import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'
 import { Button } from '@/shared/components/button'
-import type { Metadata } from 'next'
 
 interface PageProps {
   params: { slug: string }

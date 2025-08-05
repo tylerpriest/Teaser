@@ -4,7 +4,7 @@ import type { SEOMetadata } from '../../types'
 
 interface SEOHeadProps {
   metadata: SEOMetadata
-  additionalSchema?: any[]
+  additionalSchema?: Record<string, unknown>[]
 }
 
 // Note: In Next.js App Router, meta tags are handled via metadata export

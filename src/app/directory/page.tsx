@@ -1,11 +1,13 @@
-import { Suspense } from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
-import { SEOService } from '@/features/adhdnsw/services/seo.service'
+import { Suspense } from 'react'
+
 import { DirectoryFilters } from '@/features/adhdnsw/components/directory/DirectoryFilters'
 import { ProfessionalCard } from '@/features/adhdnsw/components/directory/ProfessionalCard'
+import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
+import { SEOService } from '@/features/adhdnsw/services/seo.service'
+
 import { Button } from '@/shared/components/button'
-import type { Metadata } from 'next'
 
 // Server component for the directory page
 async function DirectoryContent({
@@ -162,7 +164,7 @@ async function DirectoryContent({
           <div className="prose max-w-none">
             <p>
               Our directory helps you find qualified ADHD specialists across New South Wales. 
-              Whether you're looking for a psychiatrist for medication management, a psychologist 
+              Whether you&apos;re looking for a psychiatrist for medication management, a psychologist 
               for therapy, or an ADHD coach for practical strategies, you can search by location, 
               specialty, and specific needs.
             </p>

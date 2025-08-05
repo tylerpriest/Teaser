@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ProfessionalCard } from './ProfessionalCard'
+
 import type { Professional } from '../../types'
+
+import { ProfessionalCard } from './ProfessionalCard'
 
 const meta = {
   title: 'ADHDNSW/Directory/ProfessionalCard',

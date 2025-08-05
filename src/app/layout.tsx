@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Header } from '@/features/adhdnsw/components/layout/Header'
+
 import { Footer } from '@/features/adhdnsw/components/layout/Footer'
+import { Header } from '@/features/adhdnsw/components/layout/Header'
 
 import './globals.css'
 

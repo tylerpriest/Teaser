@@ -124,7 +124,7 @@ export class SEOService {
   /**
    * Generate structured data for a professional
    */
-  private static generateProfessionalSchema(professional: Professional): any {
+  private static generateProfessionalSchema(professional: Professional): Record<string, unknown> {
     const primaryLocation = professional.locations?.find(l => l.isPrimary)
     
     const schema = {
@@ -172,7 +172,7 @@ export class SEOService {
   /**
    * Generate structured data for a blog post
    */
-  private static generateArticleSchema(post: BlogPost): any {
+  private static generateArticleSchema(post: BlogPost): Record<string, unknown> {
     return {
       '@context': 'https://schema.org',
       '@type': 'MedicalWebPage',
@@ -206,7 +206,7 @@ export class SEOService {
   /**
    * Generate organization schema for the site
    */
-  static generateOrganizationSchema(): any {
+  static generateOrganizationSchema(): Record<string, unknown> {
     return {
       '@context': 'https://schema.org',
       '@type': 'MedicalOrganization',
@@ -230,7 +230,7 @@ export class SEOService {
   /**
    * Generate breadcrumb schema
    */
-  static generateBreadcrumbSchema(items: Array<{ name: string; url: string }>): any {
+  static generateBreadcrumbSchema(items: Array<{ name: string; url: string }>): Record<string, unknown> {
     return {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',

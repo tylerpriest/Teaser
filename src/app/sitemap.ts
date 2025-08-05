@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
-import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
+
 import { BlogService } from '@/features/adhdnsw/services/blog.service'
+import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://adhdnsw.org'

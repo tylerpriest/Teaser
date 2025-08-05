@@ -1,4 +1,3 @@
-import { supabase } from '@/shared/services/supabase'
 import type {
   BlogPost,
   BlogCategory,
@@ -6,6 +5,8 @@ import type {
   BlogSearchParams,
   PaginatedResponse,
 } from '../types'
+
+import { supabase } from '@/shared/services/supabase'
 
 export class BlogService {
   /**
@@ -254,7 +255,7 @@ export class BlogService {
   /**
    * Transform blog post data
    */
-  private static transformBlogPost(data: any): BlogPost {
+  private static transformBlogPost(data: Record<string, unknown>): BlogPost {
     return {
       id: data.id,
       slug: data.slug,
@@ -274,12 +275,12 @@ export class BlogService {
       isEvergreen: data.is_evergreen,
       createdAt: new Date(data.created_at),
       updatedAt: new Date(data.updated_at),
-      categories: data.blog_post_categories?.map((bpc: any) => bpc.category) || [],
-      tags: data.blog_post_tags?.map((bpt: any) => bpt.tag) || [],
+      categories: (data.blog_post_categories as Record<string, unknown>[])?.map((bpc: Record<string, unknown>) => bpc.category) || [],
+      tags: (data.blog_post_tags as Record<string, unknown>[])?.map((bpt: Record<string, unknown>) => bpt.tag) || [],
     }
   }
 
-  private static transformBlogPosts(data: any[]): BlogPost[] {
+  private static transformBlogPosts(data: Record<string, unknown>[]): BlogPost[] {
     return data.map(this.transformBlogPost)
   }
 

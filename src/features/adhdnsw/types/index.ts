@@ -177,7 +177,7 @@ export interface SEOMetadata {
     description?: string
     image?: string
   }
-  jsonLd?: any
+  jsonLd?: Record<string, unknown>
 }
 
 // Response Types

@@ -1,4 +1,3 @@
-import { supabase } from '@/shared/services/supabase'
 import type {
   Professional,
   Location,
@@ -7,6 +6,8 @@ import type {
   ServiceType,
   AgeGroup,
 } from '../types'
+
+import { supabase } from '@/shared/services/supabase'
 
 export class DirectoryService {
   /**
@@ -262,7 +263,7 @@ export class DirectoryService {
   /**
    * Transform raw database data to Professional type
    */
-  private static transformProfessional(data: any): Professional {
+  private static transformProfessional(data: Record<string, unknown>): Professional {
     return {
       id: data.id,
       slug: data.slug,
@@ -288,20 +289,20 @@ export class DirectoryService {
       metaTitle: data.meta_title,
       metaDescription: data.meta_description,
       locations: data.locations?.map(this.transformLocation),
-      services: data.professional_services?.map((ps: any) => ps.service_type),
-      ageGroups: data.professional_age_groups?.map((pa: any) => pa.age_group),
-      paymentMethods: data.professional_payment_methods?.map((pp: any) => ({
+      services: (data.professional_services as Record<string, unknown>[])?.map((ps: Record<string, unknown>) => ps.service_type),
+      ageGroups: (data.professional_age_groups as Record<string, unknown>[])?.map((pa: Record<string, unknown>) => pa.age_group),
+      paymentMethods: (data.professional_payment_methods as Record<string, unknown>[])?.map((pp: Record<string, unknown>) => ({
         ...pp.payment_method,
         bulkBillingAvailable: pp.bulk_billing_available,
       })),
     }
   }
 
-  private static transformProfessionalData(data: any[]): Professional[] {
+  private static transformProfessionalData(data: Record<string, unknown>[]): Professional[] {
     return data.map(this.transformProfessional)
   }
 
-  private static transformLocation(data: any): Location {
+  private static transformLocation(data: Record<string, unknown>): Location {
     return {
       id: data.id,
       professionalId: data.professional_id,

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { BlogPostCard } from './BlogPostCard'
+
 import type { BlogPost } from '../../types'
+
+import { BlogPostCard } from './BlogPostCard'
 
 const meta = {
   title: 'ADHDNSW/Blog/BlogPostCard',

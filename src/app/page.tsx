@@ -1,12 +1,15 @@
-import Link from 'next/link'
-import { Search, Users, BookOpen, Calendar, ChevronRight, MapPin, Phone } from 'lucide-react'
-import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
-import { BlogService } from '@/features/adhdnsw/services/blog.service'
-import { SEOService } from '@/features/adhdnsw/services/seo.service'
-import { ProfessionalCard } from '@/features/adhdnsw/components/directory/ProfessionalCard'
-import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'
-import { Button } from '@/shared/components/button'
 import type { Metadata } from 'next'
+import Link from 'next/link'
+
+import { Search, Users, BookOpen, ChevronRight, MapPin, Phone } from 'lucide-react'
+
+import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'
+import { ProfessionalCard } from '@/features/adhdnsw/components/directory/ProfessionalCard'
+import { BlogService } from '@/features/adhdnsw/services/blog.service'
+import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
+import { SEOService } from '@/features/adhdnsw/services/seo.service'
+
+import { Button } from '@/shared/components/button'
 
 export const metadata: Metadata = {
   title: 'ADHD NSW - Find ADHD Specialists & Resources in New South Wales',
@@ -285,7 +288,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="border rounded-lg p-6">
-              <h3 className="font-semibold mb-2">What's the typical wait time for ADHD specialists in NSW?</h3>
+              <h3 className="font-semibold mb-2">What&apos;s the typical wait time for ADHD specialists in NSW?</h3>
               <p className="text-muted-foreground">
                 Wait times vary: public system (6-12 months), private psychiatrists (2-4 months), 
                 telehealth options (2-6 weeks). Check individual profiles for current availability.

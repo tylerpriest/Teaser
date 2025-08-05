@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { ProfessionalCard } from './ProfessionalCard'
+
 import type { Professional } from '../../types'
+
+import { ProfessionalCard } from './ProfessionalCard'
 
 const mockProfessional: Professional = {
   id: '1',

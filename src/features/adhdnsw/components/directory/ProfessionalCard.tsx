@@ -1,8 +1,11 @@
 import Link from 'next/link'
+
 import { MapPin, Phone, Globe, CheckCircle, Clock } from 'lucide-react'
-import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/components/button'
+
 import type { Professional } from '../../types'
+
+import { Button } from '@/shared/components/button'
+import { cn } from '@/shared/lib/utils'
 
 interface ProfessionalCardProps {
   professional: Professional

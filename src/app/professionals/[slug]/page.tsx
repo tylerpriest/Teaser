@@ -1,9 +1,12 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+
 import { MapPin, Phone, Mail, Globe, CheckCircle, Clock, DollarSign } from 'lucide-react'
+
 import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 import { SEOService } from '@/features/adhdnsw/services/seo.service'
+
 import { Button } from '@/shared/components/button'
-import type { Metadata } from 'next'
 
 interface PageProps {
   params: { slug: string }

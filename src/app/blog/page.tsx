@@ -1,10 +1,11 @@
-import { Suspense } from 'react'
-import Link from 'next/link'
-import { BlogService } from '@/features/adhdnsw/services/blog.service'
-import { SEOService } from '@/features/adhdnsw/services/seo.service'
-import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'
-import { Button } from '@/shared/components/button'
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { Suspense } from 'react'
+
+import { BlogPostCard } from '@/features/adhdnsw/components/blog/BlogPostCard'
+import { BlogService } from '@/features/adhdnsw/services/blog.service'
+
+import { Button } from '@/shared/components/button'
 
 async function BlogContent({
   searchParams,
