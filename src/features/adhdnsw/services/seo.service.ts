@@ -172,7 +172,7 @@ export class SEOService {
   /**
    * Generate structured data for a blog post
    */
-  private static generateArticleSchema(post: BlogPost): Record<string, unknown> {
+  static generateArticleSchema(post: BlogPost): Record<string, unknown> {
     return {
       '@context': 'https://schema.org',
       '@type': 'MedicalWebPage',
