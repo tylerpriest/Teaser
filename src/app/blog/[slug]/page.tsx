@@ -1,4 +1,12 @@
-import { Calendar, Clock, User, Tag, Share2, Facebook, Twitter } from 'lucide-react'
+import {
+  Calendar,
+  Clock,
+  User,
+  Tag,
+  Share2,
+  Facebook,
+  Twitter,
+} from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,9 +22,17 @@ interface PageProps {
 }
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = await BlogService.getBlogPostBySlug(params.slug)
-  
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  let post
+
+  try {
+    post = await BlogService.getBlogPostBySlug(params.slug)
+  } catch {
+    post = null
+  }
+
   if (!post) {
     return {
       title: 'Post Not Found - ADHD NSW Blog',
@@ -54,15 +70,23 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-  const post = await BlogService.getBlogPostBySlug(params.slug)
+  let post: Awaited<ReturnType<typeof BlogService.getBlogPostBySlug>>
+  let relatedPosts: Awaited<ReturnType<typeof BlogService.getRelatedPosts>>
 
-  if (!post) {
+  try {
+    post = await BlogService.getBlogPostBySlug(params.slug)
+
+    if (!post) {
+      notFound()
+    }
+
+    const categoryIds = post.categories?.map((c) => c.id) || []
+    relatedPosts = await BlogService.getRelatedPosts(post.id, categoryIds, 3)
+  } catch {
     notFound()
   }
 
   const readingTime = Math.ceil(post.content.split(' ').length / 200)
-  const categoryIds = post.categories?.map(c => c.id) || []
-  const relatedPosts = await BlogService.getRelatedPosts(post.id, categoryIds, 3)
 
   // Generate structured data
   const jsonLd = SEOService.generateArticleSchema(post)
@@ -89,11 +113,25 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="container mx-auto px-4">
           <nav className="text-sm">
             <ol className="flex items-center space-x-2">
-              <li><Link href="/" className="text-muted-foreground hover:text-foreground">Home</Link></li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Home
+                </Link>
+              </li>
               <li className="text-muted-foreground">/</li>
-              <li><Link href="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Blog
+                </Link>
+              </li>
               <li className="text-muted-foreground">/</li>
-              <li className="font-medium line-clamp-1">{post.title}</li>
+              <li className="line-clamp-1 font-medium">{post.title}</li>
             </ol>
           </nav>
         </div>
@@ -102,15 +140,15 @@ export default async function BlogPostPage({ params }: PageProps) {
       <article>
         {/* Header */}
         <header className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
+          <div className="mx-auto max-w-4xl">
             {/* Categories */}
             {post.categories && post.categories.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {post.categories.map(category => (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {post.categories.map((category) => (
                   <Link
                     key={category.id}
                     href={`/blog?category=${category.slug}`}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                    className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                   >
                     {category.name}
                   </Link>
@@ -118,16 +156,18 @@ export default async function BlogPostPage({ params }: PageProps) {
               </div>
             )}
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">{post.title}</h1>
-            
+            <h1 className="mb-6 text-4xl font-bold md:text-5xl">
+              {post.title}
+            </h1>
+
             {post.excerpt && (
-              <p className="text-xl text-muted-foreground mb-6">
+              <p className="mb-6 text-xl text-muted-foreground">
                 {post.excerpt}
               </p>
             )}
 
             {/* Meta info */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pb-6 border-b">
+            <div className="flex flex-wrap items-center gap-4 border-b pb-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4" />
                 <span>{post.authorName}</span>
@@ -138,7 +178,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   {post.publishedAt?.toLocaleDateString('en-AU', {
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric'
+                    day: 'numeric',
                   })}
                 </time>
               </div>
@@ -152,9 +192,9 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         {/* Featured Image */}
         {post.featuredImage && (
-          <div className="container mx-auto px-4 mb-8">
-            <div className="max-w-4xl mx-auto">
-              <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden">
+          <div className="container mx-auto mb-8 px-4">
+            <div className="mx-auto max-w-4xl">
+              <div className="relative h-96 overflow-hidden rounded-lg md:h-[500px]">
                 <Image
                   src={post.featuredImage}
                   alt={post.title}
@@ -170,18 +210,18 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         {/* Content */}
         <div className="container mx-auto px-4 pb-12">
-          <div className="max-w-4xl mx-auto">
-            <div 
+          <div className="mx-auto max-w-4xl">
+            <div
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
-              <div className="mt-8 pt-8 border-t">
-                <div className="flex items-center gap-2 flex-wrap">
+              <div className="mt-8 border-t pt-8">
+                <div className="flex flex-wrap items-center gap-2">
                   <Tag className="h-4 w-4 text-muted-foreground" />
-                  {post.tags.map(tag => (
+                  {post.tags.map((tag) => (
                     <Link
                       key={tag.id}
                       href={`/blog?tag=${tag.slug}`}
@@ -195,34 +235,26 @@ export default async function BlogPostPage({ params }: PageProps) {
             )}
 
             {/* Share buttons */}
-            <div className="mt-8 pt-8 border-t">
-              <h3 className="text-lg font-semibold mb-4">Share this article</h3>
+            <div className="mt-8 border-t pt-8">
+              <h3 className="mb-4 text-lg font-semibold">Share this article</h3>
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  asChild
-                >
+                <Button variant="outline" size="sm" asChild>
                   <a
                     href={`https://www.facebook.com/sharer/sharer.php?u=https://adhdnsw.org/blog/${post.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Facebook className="h-4 w-4 mr-2" />
+                    <Facebook className="mr-2 h-4 w-4" />
                     Facebook
                   </a>
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  asChild
-                >
+                <Button variant="outline" size="sm" asChild>
                   <a
                     href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=https://adhdnsw.org/blog/${post.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Twitter className="h-4 w-4 mr-2" />
+                    <Twitter className="mr-2 h-4 w-4" />
                     Twitter
                   </a>
                 </Button>
@@ -230,11 +262,13 @@ export default async function BlogPostPage({ params }: PageProps) {
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    navigator.clipboard.writeText(`https://adhdnsw.org/blog/${post.slug}`)
+                    navigator.clipboard.writeText(
+                      `https://adhdnsw.org/blog/${post.slug}`
+                    )
                     // You could add a toast notification here
                   }}
                 >
-                  <Share2 className="h-4 w-4 mr-2" />
+                  <Share2 className="mr-2 h-4 w-4" />
                   Copy Link
                 </Button>
               </div>
@@ -242,8 +276,8 @@ export default async function BlogPostPage({ params }: PageProps) {
 
             {/* Author bio */}
             {post.authorBio && (
-              <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-                <h3 className="text-lg font-semibold mb-2">About the Author</h3>
+              <div className="mt-8 rounded-lg bg-gray-50 p-6">
+                <h3 className="mb-2 text-lg font-semibold">About the Author</h3>
                 <div className="flex items-start gap-4">
                   {post.authorImage && (
                     <Image
@@ -255,8 +289,10 @@ export default async function BlogPostPage({ params }: PageProps) {
                     />
                   )}
                   <div>
-                    <p className="font-medium mb-1">{post.authorName}</p>
-                    <p className="text-sm text-muted-foreground">{post.authorBio}</p>
+                    <p className="mb-1 font-medium">{post.authorName}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {post.authorBio}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -268,13 +304,10 @@ export default async function BlogPostPage({ params }: PageProps) {
         {relatedPosts.length > 0 && (
           <section className="bg-gray-50 py-12">
             <div className="container mx-auto px-4">
-              <h2 className="text-2xl font-semibold mb-6">Related Articles</h2>
+              <h2 className="mb-6 text-2xl font-semibold">Related Articles</h2>
               <div className="grid gap-6 md:grid-cols-3">
-                {relatedPosts.map(relatedPost => (
-                  <BlogPostCard
-                    key={relatedPost.id}
-                    post={relatedPost}
-                  />
+                {relatedPosts.map((relatedPost) => (
+                  <BlogPostCard key={relatedPost.id} post={relatedPost} />
                 ))}
               </div>
             </div>
@@ -284,10 +317,10 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* CTA Section */}
         <section className="bg-primary/5 py-12">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-2xl font-semibold mb-4">Need ADHD Support?</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Find verified ADHD professionals in your area or explore more resources 
-              to help manage ADHD effectively.
+            <h2 className="mb-4 text-2xl font-semibold">Need ADHD Support?</h2>
+            <p className="mx-auto mb-6 max-w-2xl text-muted-foreground">
+              Find verified ADHD professionals in your area or explore more
+              resources to help manage ADHD effectively.
             </p>
             <div className="flex justify-center gap-4">
               <Button asChild>

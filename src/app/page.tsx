@@ -32,14 +32,33 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   // Fetch data for homepage
-  const [featuredProfessionals, latestPosts] = await Promise.all([
-    DirectoryService.searchProfessionals({
-      limit: 3,
-      sortBy: 'relevance',
-      acceptingNewPatients: true,
-    }),
-    BlogService.getBlogPosts({ limit: 3, featured: true }),
-  ])
+  let featuredProfessionals: Awaited<
+    ReturnType<typeof DirectoryService.searchProfessionals>
+  >
+  let latestPosts: Awaited<ReturnType<typeof BlogService.getBlogPosts>>
+
+  try {
+    const results = await Promise.all([
+      DirectoryService.searchProfessionals({
+        limit: 3,
+        sortBy: 'relevance',
+        acceptingNewPatients: true,
+      }),
+      BlogService.getBlogPosts({ limit: 3, featured: true }),
+    ])
+    featuredProfessionals = results[0]
+    latestPosts = results[1]
+  } catch {
+    // Default to empty data if fetch fails
+    featuredProfessionals = {
+      data: [],
+      pagination: { total: 0, page: 1, limit: 3, totalPages: 0 },
+    }
+    latestPosts = {
+      data: [],
+      pagination: { total: 0, page: 1, limit: 3, totalPages: 0 },
+    }
+  }
 
   // Generate organization schema
   const orgSchema = SEOService.generateOrganizationSchema()

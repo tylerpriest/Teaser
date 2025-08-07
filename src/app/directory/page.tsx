@@ -18,8 +18,12 @@ async function DirectoryContent({
   const params = {
     query: searchParams.q as string,
     location: searchParams.location as string,
-    services: searchParams.services ? (searchParams.services as string).split(',') : [],
-    ageGroups: searchParams.ages ? (searchParams.ages as string).split(',') : [],
+    services: searchParams.services
+      ? (searchParams.services as string).split(',')
+      : [],
+    ageGroups: searchParams.ages
+      ? (searchParams.ages as string).split(',')
+      : [],
     ndisOnly: searchParams.ndis === 'true',
     telehealthOnly: searchParams.telehealth === 'true',
     acceptingNewPatients: searchParams.accepting === 'true',
@@ -27,11 +31,30 @@ async function DirectoryContent({
   }
 
   // Fetch data
-  const [professionals, serviceTypes, ageGroups] = await Promise.all([
-    DirectoryService.searchProfessionals(params),
-    DirectoryService.getServiceTypes(),
-    DirectoryService.getAgeGroups(),
-  ])
+  let professionals: Awaited<
+    ReturnType<typeof DirectoryService.searchProfessionals>
+  >
+  let serviceTypes: Awaited<ReturnType<typeof DirectoryService.getServiceTypes>>
+  let ageGroups: Awaited<ReturnType<typeof DirectoryService.getAgeGroups>>
+
+  try {
+    const results = await Promise.all([
+      DirectoryService.searchProfessionals(params),
+      DirectoryService.getServiceTypes(),
+      DirectoryService.getAgeGroups(),
+    ])
+    professionals = results[0]
+    serviceTypes = results[1]
+    ageGroups = results[2]
+  } catch {
+    // Default to empty data if fetch fails
+    professionals = {
+      data: [],
+      pagination: { total: 0, page: 1, limit: 12, totalPages: 0 },
+    }
+    serviceTypes = []
+    ageGroups = []
+  }
 
   const hasResults = professionals.data.length > 0
   const { pagination } = professionals
@@ -41,10 +64,13 @@ async function DirectoryContent({
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-primary/5 to-transparent py-12">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Find ADHD Professionals in NSW</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl">
-            Search our directory of verified ADHD specialists including psychiatrists, psychologists, 
-            coaches, and therapists across New South Wales.
+          <h1 className="mb-4 text-4xl font-bold">
+            Find ADHD Professionals in NSW
+          </h1>
+          <p className="max-w-3xl text-xl text-muted-foreground">
+            Search our directory of verified ADHD specialists including
+            psychiatrists, psychologists, coaches, and therapists across New
+            South Wales.
           </p>
         </div>
       </section>
@@ -64,8 +90,9 @@ async function DirectoryContent({
           <p className="text-muted-foreground">
             {hasResults ? (
               <>
-                Showing {((params.page - 1) * 20) + 1}-
-                {Math.min(params.page * 20, pagination.total)} of {pagination.total} professionals
+                Showing {(params.page - 1) * 20 + 1}-
+                {Math.min(params.page * 20, pagination.total)} of{' '}
+                {pagination.total} professionals
               </>
             ) : (
               'No professionals found matching your criteria'
@@ -103,30 +130,35 @@ async function DirectoryContent({
                     </Link>
                   </Button>
                 )}
-                
+
                 <div className="flex items-center gap-2">
-                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                    const pageNum = i + 1
-                    return (
-                      <Button
-                        key={pageNum}
-                        variant={pageNum === params.page ? 'default' : 'outline'}
-                        size="sm"
-                        asChild
-                      >
-                        <Link
-                          href={`/directory?${new URLSearchParams({
-                            ...searchParams,
-                            page: String(pageNum),
-                          }).toString()}`}
+                  {Array.from(
+                    { length: Math.min(5, pagination.totalPages) },
+                    (_, i) => {
+                      const pageNum = i + 1
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={
+                            pageNum === params.page ? 'default' : 'outline'
+                          }
+                          size="sm"
+                          asChild
                         >
-                          {pageNum}
-                        </Link>
-                      </Button>
-                    )
-                  })}
+                          <Link
+                            href={`/directory?${new URLSearchParams({
+                              ...searchParams,
+                              page: String(pageNum),
+                            }).toString()}`}
+                          >
+                            {pageNum}
+                          </Link>
+                        </Button>
+                      )
+                    }
+                  )}
                 </div>
-                
+
                 {params.page < pagination.totalPages && (
                   <Button variant="outline" asChild>
                     <Link
@@ -143,8 +175,8 @@ async function DirectoryContent({
             )}
           </>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">
+          <div className="py-12 text-center">
+            <p className="mb-4 text-muted-foreground">
               No professionals found matching your search criteria.
             </p>
             <Button variant="outline" asChild>
@@ -157,33 +189,52 @@ async function DirectoryContent({
       {/* SEO Content */}
       <section className="bg-muted/30 py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-semibold mb-4">
+          <h2 className="mb-4 text-2xl font-semibold">
             Finding the Right ADHD Professional in NSW
           </h2>
           <div className="prose max-w-none">
             <p>
-              Our directory helps you find qualified ADHD specialists across New South Wales. 
-              Whether you&apos;re looking for a psychiatrist for medication management, a psychologist 
-              for therapy, or an ADHD coach for practical strategies, you can search by location, 
+              Our directory helps you find qualified ADHD specialists across New
+              South Wales. Whether you&apos;re looking for a psychiatrist for
+              medication management, a psychologist for therapy, or an ADHD
+              coach for practical strategies, you can search by location,
               specialty, and specific needs.
             </p>
             <h3>Types of ADHD Professionals</h3>
             <ul>
-              <li><strong>Psychiatrists</strong>: Medical doctors who can diagnose ADHD and prescribe medication</li>
-              <li><strong>Psychologists</strong>: Provide therapy and behavioral interventions</li>
-              <li><strong>ADHD Coaches</strong>: Help with practical life skills and strategies</li>
-              <li><strong>Occupational Therapists</strong>: Support daily living skills and sensory needs</li>
+              <li>
+                <strong>Psychiatrists</strong>: Medical doctors who can diagnose
+                ADHD and prescribe medication
+              </li>
+              <li>
+                <strong>Psychologists</strong>: Provide therapy and behavioral
+                interventions
+              </li>
+              <li>
+                <strong>ADHD Coaches</strong>: Help with practical life skills
+                and strategies
+              </li>
+              <li>
+                <strong>Occupational Therapists</strong>: Support daily living
+                skills and sensory needs
+              </li>
             </ul>
             <h3>Popular Searches</h3>
-            <div className="flex flex-wrap gap-2 mt-4">
+            <div className="mt-4 flex flex-wrap gap-2">
               <Button variant="outline" size="sm" asChild>
-                <Link href="/directory?services=psychiatrist">ADHD Psychiatrists</Link>
+                <Link href="/directory?services=psychiatrist">
+                  ADHD Psychiatrists
+                </Link>
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/directory?location=Sydney">Sydney ADHD Specialists</Link>
+                <Link href="/directory?location=Sydney">
+                  Sydney ADHD Specialists
+                </Link>
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/directory?telehealth=true">Telehealth Options</Link>
+                <Link href="/directory?telehealth=true">
+                  Telehealth Options
+                </Link>
               </Button>
               <Button variant="outline" size="sm" asChild>
                 <Link href="/directory?ndis=true">NDIS Providers</Link>
@@ -201,10 +252,10 @@ function DirectoryLoading() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+        <div className="mb-4 h-8 w-1/3 rounded bg-gray-200"></div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-gray-200 rounded-lg h-64"></div>
+            <div key={i} className="h-64 rounded-lg bg-gray-200"></div>
           ))}
         </div>
       </div>
