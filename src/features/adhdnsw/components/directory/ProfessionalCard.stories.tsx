@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ProfessionalCard } from './ProfessionalCard'
+
 import type { Professional } from '../../types'
+
+import { ProfessionalCard } from './ProfessionalCard'
 
 const meta = {
   title: 'ADHDNSW/Directory/ProfessionalCard',
@@ -32,17 +34,19 @@ const baseProfessional: Professional = {
   specializations: ['Adult ADHD', 'Women with ADHD', 'Anxiety and ADHD'],
   languages: ['English', 'Mandarin'],
   ndisRegistered: false,
-  locations: [{
-    id: '1',
-    professionalId: '1',
-    name: 'Sydney CBD Practice',
-    streetAddress: '123 Macquarie Street',
-    suburb: 'Sydney',
-    state: 'NSW',
-    postcode: '2000',
-    isPrimary: true,
-    offersTelehealth: true,
-  }],
+  locations: [
+    {
+      id: '1',
+      professionalId: '1',
+      name: 'Sydney CBD Practice',
+      streetAddress: '123 Macquarie Street',
+      suburb: 'Sydney',
+      state: 'NSW',
+      postcode: '2000',
+      isPrimary: true,
+      offersTelehealth: true,
+    },
+  ],
   services: [
     {
       id: '1',
@@ -100,7 +104,7 @@ export const MultipleLocations: Story = {
     professional: {
       ...baseProfessional,
       locations: [
-        ...baseProfessional.locations,
+        ...(baseProfessional.locations || []),
         {
           id: '2',
           professionalId: '1',
@@ -122,7 +126,7 @@ export const ManyServices: Story = {
     professional: {
       ...baseProfessional,
       services: [
-        ...baseProfessional.services,
+        ...(baseProfessional.services || []),
         {
           id: '3',
           slug: 'adhd-assessment',

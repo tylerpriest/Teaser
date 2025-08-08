@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { BlogPostCard } from './BlogPostCard'
+
 import type { BlogPost } from '../../types'
+
+import { BlogPostCard } from './BlogPostCard'
 
 const meta = {
   title: 'ADHDNSW/Blog/BlogPostCard',
@@ -24,7 +26,8 @@ const basePost: BlogPost = {
   id: '1',
   slug: 'complete-guide-adhd-diagnosis-nsw',
   title: 'Complete Guide to ADHD Diagnosis in NSW (2024)',
-  excerpt: 'Everything you need to know about getting an ADHD diagnosis in New South Wales, including costs, wait times, and what to expect.',
+  excerpt:
+    'Everything you need to know about getting an ADHD diagnosis in New South Wales, including costs, wait times, and what to expect.',
   content: 'Full article content here...',
   featuredImage: '/images/blog/diagnosis-guide.jpg',
   authorName: 'ADHD NSW Editorial Team',
@@ -83,7 +86,7 @@ export const MultipleCategories: Story = {
     post: {
       ...basePost,
       categories: [
-        ...basePost.categories,
+        ...(basePost.categories || []),
         {
           id: '2',
           slug: 'treatment-options',
@@ -105,7 +108,8 @@ export const LongTitle: Story = {
   args: {
     post: {
       ...basePost,
-      title: 'Understanding the Complete Process of Getting an ADHD Diagnosis in New South Wales: A Comprehensive Step-by-Step Guide for Adults and Children',
+      title:
+        'Understanding the Complete Process of Getting an ADHD Diagnosis in New South Wales: A Comprehensive Step-by-Step Guide for Adults and Children',
     },
   },
 }

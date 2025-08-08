@@ -10,20 +10,24 @@ export class SEOService {
    */
   static generateProfessionalMeta(professional: Professional): SEOMetadata {
     const fullName = `${professional.title} ${professional.firstName} ${professional.lastName}`
-    const primaryLocation = professional.locations?.find(l => l.isPrimary)
-    const locationText = primaryLocation 
-      ? ` in ${primaryLocation.suburb}, NSW` 
+    const primaryLocation = professional.locations?.find((l) => l.isPrimary)
+    const locationText = primaryLocation
+      ? ` in ${primaryLocation.suburb}, NSW`
       : ' in NSW'
-    
-    const services = professional.services?.map(s => s.name).join(', ') || 'ADHD Services'
-    const credentials = professional.credentials.length > 0 
-      ? ` (${professional.credentials.join(', ')})` 
-      : ''
 
-    const title = professional.metaTitle || 
+    const services =
+      professional.services?.map((s) => s.name).join(', ') || 'ADHD Services'
+    const credentials =
+      professional.credentials.length > 0
+        ? ` (${professional.credentials.join(', ')})`
+        : ''
+
+    const title =
+      professional.metaTitle ||
       `${fullName} - ADHD ${professional.services?.[0]?.name || 'Specialist'}${locationText}`
-    
-    const description = professional.metaDescription || 
+
+    const description =
+      professional.metaDescription ||
       `${fullName}${credentials} - ${services}${locationText}. ${
         professional.bio?.substring(0, 120) || 'Experienced ADHD professional'
       }... Book online or view contact details.`
@@ -52,9 +56,8 @@ export class SEOService {
    */
   static generateBlogPostMeta(post: BlogPost): SEOMetadata {
     const title = post.metaTitle || post.title
-    const description = post.metaDescription || 
-      post.excerpt || 
-      this.generateExcerpt(post.content)
+    const description =
+      post.metaDescription || post.excerpt || this.generateExcerpt(post.content)
 
     return {
       title: this.truncateTitle(title),
@@ -85,9 +88,10 @@ export class SEOService {
     page?: number
   }): SEOMetadata {
     const { location, service, page = 1 } = params
-    
+
     let title = 'ADHD Professionals Directory NSW'
-    let description = 'Find verified ADHD specialists in New South Wales. Search psychiatrists, psychologists, coaches, and more.'
+    let description =
+      'Find verified ADHD specialists in New South Wales. Search psychiatrists, psychologists, coaches, and more.'
 
     if (service && location) {
       title = `ADHD ${service} in ${location}, NSW`
@@ -124,20 +128,22 @@ export class SEOService {
   /**
    * Generate structured data for a professional
    */
-  private static generateProfessionalSchema(professional: Professional): any {
-    const primaryLocation = professional.locations?.find(l => l.isPrimary)
-    
+  static generateProfessionalSchema(
+    professional: Professional
+  ): Record<string, unknown> {
+    const primaryLocation = professional.locations?.find((l) => l.isPrimary)
+
     const schema = {
       '@context': 'https://schema.org',
       '@type': 'MedicalBusiness',
       '@id': `${this.siteUrl}/professionals/${professional.slug}`,
       name: `${professional.title} ${professional.firstName} ${professional.lastName}`,
       description: professional.bio,
-      medicalSpecialty: professional.services?.map(s => ({
+      medicalSpecialty: professional.services?.map((s) => ({
         '@type': 'MedicalSpecialty',
         name: s.name,
       })),
-      hasCredential: professional.credentials.map(c => ({
+      hasCredential: professional.credentials.map((c) => ({
         '@type': 'EducationalOccupationalCredential',
         credentialCategory: c,
       })),
@@ -153,11 +159,14 @@ export class SEOService {
           postalCode: primaryLocation.postcode,
           addressCountry: 'AU',
         },
-        geo: primaryLocation.latitude && primaryLocation.longitude ? {
-          '@type': 'GeoCoordinates',
-          latitude: primaryLocation.latitude,
-          longitude: primaryLocation.longitude,
-        } : undefined,
+        geo:
+          primaryLocation.latitude && primaryLocation.longitude
+            ? {
+                '@type': 'GeoCoordinates',
+                latitude: primaryLocation.latitude,
+                longitude: primaryLocation.longitude,
+              }
+            : undefined,
         telephone: primaryLocation.phone || professional.phone,
       })
     }
@@ -172,14 +181,16 @@ export class SEOService {
   /**
    * Generate structured data for a blog post
    */
-  private static generateArticleSchema(post: BlogPost): any {
+  static generateArticleSchema(post: BlogPost): Record<string, unknown> {
     return {
       '@context': 'https://schema.org',
       '@type': 'MedicalWebPage',
       '@id': `${this.siteUrl}/blog/${post.slug}`,
       headline: post.title,
       description: post.excerpt || this.generateExcerpt(post.content),
-      image: post.featuredImage ? `${this.siteUrl}${post.featuredImage}` : undefined,
+      image: post.featuredImage
+        ? `${this.siteUrl}${post.featuredImage}`
+        : undefined,
       datePublished: post.publishedAt?.toISOString(),
       dateModified: post.updatedAt.toISOString(),
       author: {
@@ -206,7 +217,7 @@ export class SEOService {
   /**
    * Generate organization schema for the site
    */
-  static generateOrganizationSchema(): any {
+  static generateOrganizationSchema(): Record<string, unknown> {
     return {
       '@context': 'https://schema.org',
       '@type': 'MedicalOrganization',
@@ -214,23 +225,23 @@ export class SEOService {
       name: 'ADHD NSW',
       url: this.siteUrl,
       logo: `${this.siteUrl}/images/logo.png`,
-      description: 'Trusted directory of ADHD professionals and resources for New South Wales',
+      description:
+        'Trusted directory of ADHD professionals and resources for New South Wales',
       address: {
         '@type': 'PostalAddress',
         addressRegion: 'NSW',
         addressCountry: 'AU',
       },
-      sameAs: [
-        'https://twitter.com/adhdnsw',
-        'https://facebook.com/adhdnsw',
-      ],
+      sameAs: ['https://twitter.com/adhdnsw', 'https://facebook.com/adhdnsw'],
     }
   }
 
   /**
    * Generate breadcrumb schema
    */
-  static generateBreadcrumbSchema(items: Array<{ name: string; url: string }>): any {
+  static generateBreadcrumbSchema(
+    items: Array<{ name: string; url: string }>
+  ): Record<string, unknown> {
     return {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -251,12 +262,18 @@ export class SEOService {
     return title.substring(0, maxLength - 3) + '...'
   }
 
-  private static truncateDescription(description: string, maxLength: number = 160): string {
+  private static truncateDescription(
+    description: string,
+    maxLength: number = 160
+  ): string {
     if (description.length <= maxLength) return description
     return description.substring(0, maxLength - 3) + '...'
   }
 
-  private static generateExcerpt(content: string, maxLength: number = 160): string {
+  private static generateExcerpt(
+    content: string,
+    maxLength: number = 160
+  ): string {
     // Remove markdown/HTML
     const plainText = content
       .replace(/#{1,6}\s/g, '')
@@ -264,7 +281,7 @@ export class SEOService {
       .replace(/<[^>]+>/g, '')
       .replace(/\n+/g, ' ')
       .trim()
-    
+
     return this.truncateDescription(plainText, maxLength)
   }
 }

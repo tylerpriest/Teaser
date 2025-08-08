@@ -1,9 +1,18 @@
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  CheckCircle,
+  Clock,
+  DollarSign,
+} from 'lucide-react'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { MapPin, Phone, Mail, Globe, CheckCircle, Clock, DollarSign } from 'lucide-react'
+
 import { DirectoryService } from '@/features/adhdnsw/services/directory.service'
 import { SEOService } from '@/features/adhdnsw/services/seo.service'
 import { Button } from '@/shared/components/button'
-import type { Metadata } from 'next'
 
 interface PageProps {
   params: { slug: string }
@@ -16,9 +25,17 @@ export async function generateStaticParams() {
 }
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const professional = await DirectoryService.getProfessionalBySlug(params.slug)
-  
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  let professional
+
+  try {
+    professional = await DirectoryService.getProfessionalBySlug(params.slug)
+  } catch {
+    professional = null
+  }
+
   if (!professional) {
     return {
       title: 'Professional Not Found - ADHD NSW',
@@ -46,15 +63,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProfessionalProfilePage({ params }: PageProps) {
-  const professional = await DirectoryService.getProfessionalBySlug(params.slug)
+  let professional: Awaited<
+    ReturnType<typeof DirectoryService.getProfessionalBySlug>
+  >
+
+  try {
+    professional = await DirectoryService.getProfessionalBySlug(params.slug)
+  } catch {
+    notFound()
+  }
 
   if (!professional) {
     notFound()
   }
 
   const fullName = `${professional.title} ${professional.firstName} ${professional.lastName}`
-  const primaryLocation = professional.locations?.find(l => l.isPrimary)
-  const otherLocations = professional.locations?.filter(l => !l.isPrimary) || []
+  const primaryLocation = professional.locations?.find((l) => l.isPrimary)
+  const otherLocations =
+    professional.locations?.filter((l) => !l.isPrimary) || []
 
   // Generate structured data
   const jsonLd = SEOService.generateProfessionalSchema(professional)
@@ -81,9 +107,23 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
         <div className="container mx-auto px-4">
           <nav className="text-sm">
             <ol className="flex items-center space-x-2">
-              <li><a href="/" className="text-muted-foreground hover:text-foreground">Home</a></li>
+              <li>
+                <a
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Home
+                </a>
+              </li>
               <li className="text-muted-foreground">/</li>
-              <li><a href="/directory" className="text-muted-foreground hover:text-foreground">Directory</a></li>
+              <li>
+                <a
+                  href="/directory"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Directory
+                </a>
+              </li>
               <li className="text-muted-foreground">/</li>
               <li className="font-medium">{fullName}</li>
             </ol>
@@ -93,13 +133,16 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
 
       {/* Profile Header */}
       <section className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-sm border p-8">
-          <div className="flex justify-between items-start mb-6">
+        <div className="rounded-lg border bg-white p-8 shadow-sm">
+          <div className="mb-6 flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
+              <h1 className="mb-2 flex items-center gap-2 text-3xl font-bold">
                 {fullName}
                 {professional.isVerified && (
-                  <CheckCircle className="h-6 w-6 text-green-600" aria-label="Verified professional" />
+                  <CheckCircle
+                    className="h-6 w-6 text-green-600"
+                    aria-label="Verified professional"
+                  />
                 )}
               </h1>
               {professional.credentials.length > 0 && (
@@ -108,12 +151,16 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
                 </p>
               )}
             </div>
-            
+
             {/* Quick Actions */}
             <div className="flex gap-2">
               {professional.bookingUrl && (
                 <Button asChild>
-                  <a href={professional.bookingUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={professional.bookingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Book Appointment
                   </a>
                 </Button>
@@ -121,7 +168,7 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
               {professional.phone && (
                 <Button variant="outline" asChild>
                   <a href={`tel:${professional.phone}`}>
-                    <Phone className="h-4 w-4 mr-2" />
+                    <Phone className="mr-2 h-4 w-4" />
                     Call
                   </a>
                 </Button>
@@ -131,12 +178,12 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
 
           {/* Services */}
           <div className="mb-6">
-            <h2 className="font-semibold mb-3">Services Offered</h2>
+            <h2 className="mb-3 font-semibold">Services Offered</h2>
             <div className="flex flex-wrap gap-2">
-              {professional.services?.map(service => (
-                <span 
+              {professional.services?.map((service) => (
+                <span
                   key={service.id}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary"
+                  className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary"
                 >
                   {service.name}
                 </span>
@@ -147,62 +194,68 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
           {/* Specializations */}
           {professional.specializations.length > 0 && (
             <div className="mb-6">
-              <h2 className="font-semibold mb-3">Areas of Specialization</h2>
-              <ul className="list-disc list-inside space-y-1">
+              <h2 className="mb-3 font-semibold">Areas of Specialization</h2>
+              <ul className="list-inside list-disc space-y-1">
                 {professional.specializations.map((spec, index) => (
-                  <li key={index} className="text-muted-foreground">{spec}</li>
+                  <li key={index} className="text-muted-foreground">
+                    {spec}
+                  </li>
                 ))}
               </ul>
             </div>
           )}
 
           {/* Status Cards */}
-          <div className="grid md:grid-cols-3 gap-4 mb-6">
-            <div className="border rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
+          <div className="mb-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-lg border p-4">
+              <div className="mb-2 flex items-center gap-2">
                 <Clock className="h-5 w-5 text-muted-foreground" />
                 <h3 className="font-medium">Availability</h3>
               </div>
               {professional.acceptsNewPatients ? (
-                <p className="text-green-600 font-medium">Accepting new patients</p>
+                <p className="font-medium text-green-600">
+                  Accepting new patients
+                </p>
               ) : (
-                <p className="text-orange-600 font-medium">Waitlist only</p>
+                <p className="font-medium text-orange-600">Waitlist only</p>
               )}
               {professional.waitlistWeeks && (
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Approx. {professional.waitlistWeeks} week wait
                 </p>
               )}
             </div>
 
-            <div className="border rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="rounded-lg border p-4">
+              <div className="mb-2 flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-muted-foreground" />
                 <h3 className="font-medium">Payment Options</h3>
               </div>
-              {professional.paymentMethods?.map(method => (
+              {professional.paymentMethods?.map((method) => (
                 <p key={method.id} className="text-sm">
                   {method.name}
                   {method.bulkBillingAvailable && (
-                    <span className="text-green-600 ml-1">(Bulk billing available)</span>
+                    <span className="ml-1 text-green-600">
+                      (Bulk billing available)
+                    </span>
                   )}
                 </p>
               ))}
             </div>
 
-            <div className="border rounded-lg p-4">
-              <h3 className="font-medium mb-2">Additional Info</h3>
+            <div className="rounded-lg border p-4">
+              <h3 className="mb-2 font-medium">Additional Info</h3>
               {professional.ndisRegistered && (
-                <p className="text-sm mb-1">✓ NDIS Registered</p>
+                <p className="mb-1 text-sm">✓ NDIS Registered</p>
               )}
               {professional.languages.length > 1 && (
-                <p className="text-sm mb-1">
+                <p className="mb-1 text-sm">
                   Languages: {professional.languages.join(', ')}
                 </p>
               )}
               {professional.ageGroups && (
                 <p className="text-sm">
-                  Ages: {professional.ageGroups.map(ag => ag.name).join(', ')}
+                  Ages: {professional.ageGroups.map((ag) => ag.name).join(', ')}
                 </p>
               )}
             </div>
@@ -213,16 +266,20 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
       {/* About Section */}
       {(professional.bio || professional.approach) && (
         <section className="container mx-auto px-4 pb-8">
-          <div className="bg-white rounded-lg shadow-sm border p-8">
-            <h2 className="text-2xl font-semibold mb-4">About {professional.firstName}</h2>
+          <div className="rounded-lg border bg-white p-8 shadow-sm">
+            <h2 className="mb-4 text-2xl font-semibold">
+              About {professional.firstName}
+            </h2>
             {professional.bio && (
-              <div className="prose max-w-none mb-6">
+              <div className="prose mb-6 max-w-none">
                 <p>{professional.bio}</p>
               </div>
             )}
             {professional.approach && (
               <>
-                <h3 className="text-lg font-semibold mb-2">Treatment Approach</h3>
+                <h3 className="mb-2 text-lg font-semibold">
+                  Treatment Approach
+                </h3>
                 <div className="prose max-w-none">
                   <p>{professional.approach}</p>
                 </div>
@@ -234,36 +291,41 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
 
       {/* Locations */}
       <section className="container mx-auto px-4 pb-8">
-        <div className="bg-white rounded-lg shadow-sm border p-8">
-          <h2 className="text-2xl font-semibold mb-4">Locations</h2>
-          
+        <div className="rounded-lg border bg-white p-8 shadow-sm">
+          <h2 className="mb-4 text-2xl font-semibold">Locations</h2>
+
           {/* Primary Location */}
           {primaryLocation && (
             <div className="mb-6">
-              <h3 className="font-semibold mb-3 flex items-center gap-2">
+              <h3 className="mb-3 flex items-center gap-2 font-semibold">
                 {primaryLocation.name}
-                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">Primary</span>
+                <span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">
+                  Primary
+                </span>
               </h3>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <div className="flex items-start gap-2 mb-3">
-                    <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                  <div className="mb-3 flex items-start gap-2">
+                    <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
                     <div>
                       <p>{primaryLocation.streetAddress}</p>
-                      <p>{primaryLocation.suburb}, {primaryLocation.state} {primaryLocation.postcode}</p>
+                      <p>
+                        {primaryLocation.suburb}, {primaryLocation.state}{' '}
+                        {primaryLocation.postcode}
+                      </p>
                     </div>
                   </div>
                   {primaryLocation.phone && (
-                    <a 
+                    <a
                       href={`tel:${primaryLocation.phone}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-2"
+                      className="mb-2 flex items-center gap-2 text-muted-foreground hover:text-foreground"
                     >
                       <Phone className="h-4 w-4" />
                       {primaryLocation.phone}
                     </a>
                   )}
                   {primaryLocation.email && (
-                    <a 
+                    <a
                       href={`mailto:${primaryLocation.email}`}
                       className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                     >
@@ -274,7 +336,7 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
                 </div>
                 <div>
                   {primaryLocation.offersTelehealth && (
-                    <p className="text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded inline-block">
+                    <p className="inline-block rounded bg-blue-50 px-3 py-1 text-sm text-blue-700">
                       Telehealth available
                     </p>
                   )}
@@ -286,16 +348,18 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
           {/* Other Locations */}
           {otherLocations.length > 0 && (
             <>
-              <h3 className="font-semibold mb-3">Other Locations</h3>
+              <h3 className="mb-3 font-semibold">Other Locations</h3>
               <div className="space-y-4">
-                {otherLocations.map(location => (
+                {otherLocations.map((location) => (
                   <div key={location.id} className="border-l-2 pl-4">
-                    <h4 className="font-medium mb-1">{location.name}</h4>
+                    <h4 className="mb-1 font-medium">{location.name}</h4>
                     <p className="text-sm text-muted-foreground">
                       {location.suburb}, {location.state} {location.postcode}
                     </p>
                     {location.offersTelehealth && (
-                      <p className="text-xs text-blue-600 mt-1">Telehealth available</p>
+                      <p className="mt-1 text-xs text-blue-600">
+                        Telehealth available
+                      </p>
                     )}
                   </div>
                 ))}
@@ -307,15 +371,20 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
 
       {/* Contact Section */}
       <section className="container mx-auto px-4 pb-12">
-        <div className="bg-gray-50 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Ready to Book?</h2>
-          <p className="text-muted-foreground mb-6">
-            Contact {professional.firstName} directly to schedule an appointment or learn more about their services.
+        <div className="rounded-lg bg-gray-50 p-8 text-center">
+          <h2 className="mb-4 text-2xl font-semibold">Ready to Book?</h2>
+          <p className="mb-6 text-muted-foreground">
+            Contact {professional.firstName} directly to schedule an appointment
+            or learn more about their services.
           </p>
           <div className="flex justify-center gap-4">
             {professional.bookingUrl && (
               <Button size="lg" asChild>
-                <a href={professional.bookingUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={professional.bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Book Online
                 </a>
               </Button>
@@ -323,15 +392,19 @@ export default async function ProfessionalProfilePage({ params }: PageProps) {
             {professional.phone && (
               <Button size="lg" variant="outline" asChild>
                 <a href={`tel:${professional.phone}`}>
-                  <Phone className="h-4 w-4 mr-2" />
+                  <Phone className="mr-2 h-4 w-4" />
                   {professional.phone}
                 </a>
               </Button>
             )}
             {professional.website && (
               <Button size="lg" variant="outline" asChild>
-                <a href={professional.website} target="_blank" rel="noopener noreferrer">
-                  <Globe className="h-4 w-4 mr-2" />
+                <a
+                  href={professional.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Globe className="mr-2 h-4 w-4" />
                   Visit Website
                 </a>
               </Button>

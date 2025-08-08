@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import { Search, MapPin, Filter, X } from 'lucide-react'
+import { useState } from 'react'
+
 import { Button } from '@/shared/components/button'
 import { cn } from '@/shared/lib/utils'
+
 import type { ServiceType, AgeGroup } from '../../types'
 
 interface DirectoryFiltersProps {
